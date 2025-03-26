@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import logo from "../../assets/logo.jpeg";
+import logo from "../../assets/logo.png";
 import {
   Dialog,
   DialogContent,
