@@ -2,9 +2,22 @@ import React, { useState, useEffect } from "react";
 import moment from "moment";
 import { API_URL } from "@/config/api";
 
+// Interface for data from API
+interface AppointmentResponse {
+  _id: string;
+  tutorId: string;
+  studentId: string;
+  start: string; // API returns dates as strings
+  end: string;
+  title: string;
+  __v: number;
+}
+
+// Interface for processed appointments with proper Date objects
 interface Appointment {
-  id: number;
-  tutorId: number;
+  _id: string;
+  tutorId: string;
+  studentId: string;
   start: Date;
   end: Date;
   title: string;
@@ -12,7 +25,6 @@ interface Appointment {
 
 const StudentAppointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const studentId = 1; // Replace with the actual student ID
 
   useEffect(() => {
     const fetchStudentAppointments = async () => {
@@ -24,15 +36,25 @@ const StudentAppointments: React.FC = () => {
           },
           credentials: "include",
         });
-        const data = await response.json();
-        setAppointments(data);
+        const data = (await response.json()) as AppointmentResponse[];
+
+        // Convert string dates to Date objects
+        const formattedAppointments = data.map(
+          (appointment: AppointmentResponse) => ({
+            ...appointment,
+            start: new Date(appointment.start),
+            end: new Date(appointment.end),
+          })
+        );
+
+        setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching student appointments:", error);
       }
     };
 
     fetchStudentAppointments();
-  }, [studentId]);
+  }, []);
 
   return (
     <div className="p-4 font-roboto text-text-color bg-primary-bg min-h-screen">
@@ -43,20 +65,20 @@ const StudentAppointments: React.FC = () => {
       {appointments.length > 0 ? (
         <table className="w-full text-left table-auto">
           <thead>
-            <tr>
-              <th className="px-4 py-2">Title</th>
+            <tr className="bg-gray-100">
+              <th className="px-4 py-2 rounded-tl-lg">Title</th>
               <th className="px-4 py-2">Start</th>
-              <th className="px-4 py-2">End</th>
+              <th className="px-4 py-2 rounded-tr-lg">End</th>
             </tr>
           </thead>
           <tbody>
             {appointments.map((appointment) => (
-              <tr key={appointment.id} className="border-b">
-                <td className="px-4 py-2">{appointment.title}</td>
-                <td className="px-4 py-2">
+              <tr key={appointment._id} className="border-b hover:bg-gray-50">
+                <td className="px-4 py-3">{appointment.title}</td>
+                <td className="px-4 py-3">
                   {moment(appointment.start).format("MMMM Do YYYY, h:mm a")}
                 </td>
-                <td className="px-4 py-2">
+                <td className="px-4 py-3">
                   {moment(appointment.end).format("MMMM Do YYYY, h:mm a")}
                 </td>
               </tr>
@@ -64,7 +86,12 @@ const StudentAppointments: React.FC = () => {
           </tbody>
         </table>
       ) : (
-        <p className="text-center">No appointments booked yet.</p>
+        <div className="text-center p-10 bg-gray-50 rounded-lg shadow-sm">
+          <p className="text-lg text-gray-600">No appointments booked yet.</p>
+          <p className="mt-2 text-primary-600">
+            Book a session with one of our tutors to get started!
+          </p>
+        </div>
       )}
     </div>
   );

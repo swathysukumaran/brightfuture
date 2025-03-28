@@ -4,8 +4,10 @@ import { get } from 'lodash';
 import mongoose from 'mongoose';
 export const getAppointmentsByStudent = async (req: Request, res: Response) => {
     try {
-        const studentId = new mongoose.Types.ObjectId(get(req, 'identity._id'));;
+        const studentId = new mongoose.Types.ObjectId(get(req, 'identity._id'));
+        console.log("studentId", studentId);
         const appointments = await Appointment.find({ studentId }).populate('tutorId', 'name'); // Populate tutor name
+        console.log("appointments", appointments);
         res.json(appointments);
     } catch (error) {
         res.status(500).json({ message: error.message });

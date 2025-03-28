@@ -3,7 +3,7 @@ import { getAppointmentsByStudent,createAppointment } from '../controllers/appoi
 import { isAuthenticated } from '../middlewares';
 
 export default (router:express.Router)=>{
-    router.get('/api/appointments',getAppointmentsByStudent);
-    router.post('/api/appointments',createAppointment);
+    router.get('/api/appointments',isAuthenticated,getAppointmentsByStudent);
+    router.post('/api/appointments',isAuthenticated,createAppointment);
     
 };

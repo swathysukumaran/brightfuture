@@ -32,7 +32,15 @@ interface Tutor {
   availability: { start: string; end: string }[];
   profilePicture: string;
 }
-
+interface AppointmentResponse {
+  _id: string;
+  tutorId: string;
+  studentId: string;
+  start: string; // From API dates are strings
+  end: string;
+  title: string;
+  __v?: number;
+}
 const StudentDashboard: React.FC = () => {
   const [tutors, setTutors] = useState<Tutor[]>([]);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
@@ -50,9 +58,12 @@ const StudentDashboard: React.FC = () => {
   const studentId = 1;
 
   interface Appointment {
+    _id?: string;
     start: Date;
     end: Date;
-    tutorId: string;
+    tutorId: string | number;
+    studentId?: string | number;
+    title?: string;
   }
   const imageMap: { [key: string]: string } = {
     "Emily Carter": emilyCarter,
@@ -63,6 +74,7 @@ const StudentDashboard: React.FC = () => {
     "Marcus Patel": marcusPatel,
   };
 
+  // In StudentDashboard.tsx
   useEffect(() => {
     const fetchTutorsAndAppointments = async () => {
       try {
@@ -77,9 +89,20 @@ const StudentDashboard: React.FC = () => {
           }),
         ]);
         const tutorsData = await tutorResponse.json();
-        const appointmentsData = await appointmentResponse.json();
+        const appointmentsData =
+          (await appointmentResponse.json()) as AppointmentResponse[];
+
+        // Convert string dates to Date objects for appointments
+        const formattedAppointments = appointmentsData.map(
+          (appointment: AppointmentResponse) => ({
+            ...appointment,
+            start: new Date(appointment.start),
+            end: new Date(appointment.end),
+          })
+        );
+
         setTutors(tutorsData);
-        setAppointments(appointmentsData);
+        setAppointments(formattedAppointments);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
@@ -102,10 +125,15 @@ const StudentDashboard: React.FC = () => {
     }
   };
   const eventStyleGetter = (event: Appointment) => {
+    const eventStart =
+      event.start instanceof Date ? event.start : new Date(event.start);
+    const eventEnd =
+      event.end instanceof Date ? event.end : new Date(event.end);
+
     if (
       selectedSlot &&
-      event.start.getTime() === selectedSlot.start.getTime() &&
-      event.end.getTime() === selectedSlot.end.getTime()
+      eventStart.getTime() === selectedSlot.start.getTime() &&
+      eventEnd.getTime() === selectedSlot.end.getTime()
     ) {
       return {
         style: {
