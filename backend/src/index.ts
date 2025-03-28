@@ -6,6 +6,7 @@ import compression from 'compression';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import router from './router';
+import dotenv from 'dotenv';
 import { SpeechClient } from '@google-cloud/speech';
 require('dotenv').config();
 const app=express();
@@ -24,11 +25,12 @@ const server=http.createServer(app);
 server.listen(8081,()=>{
     console.log('Server is running on http://localhost:8081/');
 });
-
-const MONGO_URL="mongodb+srv://swathysukumaran:swathy@cluster0.fu1y6.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
+dotenv.config();
+const MONGO_URL=process.env.MONGO_URL;
+console.log('Mongo URL:',MONGO_URL);
 
 mongoose.Promise=Promise;
-mongoose.connect(MONGO_URL);
+mongoose.connect(process.env.MONGO_URL);
 mongoose.connection.on('error',(error:Error)=>{console.log(error);});
 
 app.use(bodyparser.json({ limit: '50mb' }));
