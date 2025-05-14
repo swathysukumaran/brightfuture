@@ -1,30 +1,9 @@
-import React, { useState } from "react";
-import logo from "../../assets/logo.png";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "../ui/dialog";
 import { Button } from "../ui/button";
-import Login from "./Login";
-import Register from "./Register";
-import tutorImage from "../../assets/tutor-student.jpg";
 import { BookOpen, Clock, MessageSquare } from "lucide-react";
-import { Card, CardContent } from "../ui/card";
 import { useNavigate } from "react-router-dom";
 
 function LandingPage() {
   const navigate = useNavigate();
-
-  type DialogContentType = "login" | "register" | null;
-  const [dialogContent, setDialogContent] = useState<DialogContentType>(null);
-
-  const openRegisterDialog = () => {
-    setDialogContent("register");
-  };
 
   return (
     <div className="min-h-screen bg-white text-gray-800 flex flex-col">
@@ -37,120 +16,69 @@ function LandingPage() {
           <Button onClick={() => navigate("/register")}>Register</Button>
         </div>
       </header>
-      <section>
-        <section className="flex flex-col md:flex-row items-center justify-between mx-auto">
-          <div className="w-full md:w-1/2">
-            <img src={tutorImage} alt="Student learning with a tutor" />
-          </div>
-          <div className="w-full md:w-1/2 p-8">
-            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-primary-700 leading-tight">
-              Unlock your academic potential
-            </h1>
-            <p className="text-xl text-gray-600 py-2">
-              Discover personalized tutoring sessions powered by expert
-              educators, designed to match your learning style, pace, and
-              educational goals.
-            </p>
-            <div className="pt-4 flex flex-col sm:flex-row gap-4">
-              <Dialog
-                open={dialogContent === "register"}
-                onOpenChange={() =>
-                  dialogContent === "register" && setDialogContent(null)
-                }
-              >
-                <DialogTrigger asChild>
-                  <Button
-                    className="text-lg text-gray-600 border-gray-600"
-                    onClick={openRegisterDialog}
-                  >
-                    Find a tutor
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="bg-white text-gray-900">
-                  <DialogHeader>
-                    <DialogTitle>Create an account</DialogTitle>
-                    <DialogDescription>
-                      Enter your details to register for tutoring
-                    </DialogDescription>
-                  </DialogHeader>
-                  <Register
-                    onLoginClick={() => {
-                      setDialogContent("login");
-                    }}
-                  />
-                </DialogContent>
-              </Dialog>
-            </div>
-          </div>
-        </section>
-
-        {/* What Makes Us Different */}
-        <section className="py-16 bg-white">
-          <div className="container mx-auto px-4">
-            <div className="text-center mb-12">
-              <h2 className="text-3xl md:text-4xl font-bold mb-4 text-primary-700">
-                Education That's Truly Personal
-              </h2>
-              <p className="text-gray-600 max-w-2xl mx-auto">
-                We don't just follow a standard curriculum—we build learning
-                experiences around your unique educational needs and goals.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-              <Card className="border-none shadow-md">
-                <CardContent className="pt-6">
-                  <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mb-4">
-                    <Users className="h-6 w-6 text-primary-600" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-primary-700">
-                    Expert Tutors
-                  </h3>
-                  <p className="text-gray-600">
-                    Our qualified educators are carefully selected for their
-                    subject expertise and teaching abilities, ensuring quality
-                    instruction for every student.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-none shadow-md">
-                <CardContent className="pt-6">
-                  <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mb-4">
-                    <BookOpen className="h-6 w-6 text-primary-600" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-primary-700">
-                    Customized Learning
-                  </h3>
-                  <p className="text-gray-600">
-                    Our tutoring plans are tailored to each student's learning
-                    style, addressing specific challenges and building on their
-                    strengths.
-                  </p>
-                </CardContent>
-              </Card>
-
-              <Card className="border-none shadow-md">
-                <CardContent className="pt-6">
-                  <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center mb-4">
-                    <Calendar className="h-6 w-6 text-primary-600" />
-                  </div>
-                  <h3 className="text-xl font-bold mb-2 text-primary-700">
-                    Flexible Scheduling
-                  </h3>
-                  <p className="text-gray-600">
-                    Choose between online and in-person sessions at times that
-                    work for your busy schedule, making learning accessible and
-                    convenient.
-                  </p>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+      {/* Hero Section */}
+      <section className="flex flex-col items-center text-center px-4 py-16 bg-blue-50">
+        <h2 className="text-4xl font-extrabold mb-4">
+          Your Bright Future Starts Here
+        </h2>
+        <p className="text-lg mb-6 max-w-xl">
+          Book the right tutor in minutes. Learn on your schedule with the help
+          you need.
+        </p>
+        <Button size="lg" onClick={() => navigate("/tutors")}>
+          Find Tutors
+        </Button>
       </section>
+
+      {/* Highlights */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-6 px-8 py-16 bg-white">
+        <FeatureCard
+          icon={<BookOpen className="w-10 h-10 text-blue-500" />}
+          title="Skilled Tutors"
+          description="Find qualified tutors across a wide range of subjects."
+        />
+        <FeatureCard
+          icon={<Clock className="w-10 h-10 text-yellow-500" />}
+          title="Flexible Scheduling"
+          description="Book sessions at times that work best for you."
+        />
+        <FeatureCard
+          icon={<MessageSquare className="w-10 h-10 text-green-500" />}
+          title="1-on-1 Support"
+          description="Personalized help to improve your learning outcomes."
+        />
+      </section>
+
+      {/* Call to Action */}
+      <section className="text-center py-12 bg-blue-100">
+        <h3 className="text-2xl font-semibold mb-4">Ready to get started?</h3>
+        <Button size="lg" onClick={() => navigate("/register")}>
+          Create Your Account
+        </Button>
+      </section>
+
+      {/* Footer */}
+      <footer className="text-sm text-center py-6 border-t bg-white">
+        © {new Date().getFullYear()} Bright Futures. All rights reserved.
+      </footer>
     </div>
   );
 }
-
+function FeatureCard({
+  icon,
+  title,
+  description,
+}: {
+  icon: JSX.Element;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex flex-col items-center text-center p-6 rounded-xl shadow hover:shadow-md transition-all bg-gray-50">
+      <div className="mb-4">{icon}</div>
+      <h4 className="text-lg font-bold mb-2">{title}</h4>
+      <p className="text-sm text-gray-600">{description}</p>
+    </div>
+  );
+}
 export default LandingPage;
