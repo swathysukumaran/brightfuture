@@ -14,7 +14,6 @@ import Header from "./components/custom/Header.tsx";
 import { Toaster } from "./components/ui/sonner.tsx";
 import Register from "./components/custom/Register.tsx";
 import Login from "./components/custom/Login.tsx";
-import Onboarding from "./components/custom/Onboarding.tsx";
 import LandingPage from "./components/custom/LandingPage.tsx";
 
 import StudentDashboard from "./components/custom/StudentDashboard.tsx";
@@ -66,10 +65,6 @@ const router = createBrowserRouter([
         element: <Contact />,
       },
 
-      {
-        path: "/onboarding",
-        element: <Onboarding />,
-      },
       {
         path: "/appointments",
         element: <StudentAppointments />,
