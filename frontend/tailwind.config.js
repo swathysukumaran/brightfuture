@@ -1,33 +1,35 @@
 /** @type {import('tailwindcss').Config} */
+
 export default {
-	darkMode: ["class"],
-	content: ["./index.html", "./src/**/*.{ts,tsx,js,jsx}"],
+	darkMode: "class",
+	content: [
+		"./index.html",
+		"./src/**/*.{js,ts,jsx,tsx}",
+		"./src/components/**/*.{js,ts,jsx,tsx}",
+	],
 	theme: {
 		extend: {
 			colors: {
-				'primary-bg': '#FFFCF2',
-				'secondary-bg': '#CCC5B9',
-				'primary-button': '#403D39',
-				'secondary-button': '#EB5E28',
-				'text-color': '#252422',
-				'primary-bg-50': 'rgba(255, 252, 242, 0.5)',
-				'secondary-bg-50': 'rgba(204, 197, 185, 0.5)',
-				'primary-button-50': 'rgba(64, 61, 57, 0.5)',
-				'secondary-button-50': 'rgba(235, 94, 40, 0.5)',
-				'text-color-50': 'rgba(37, 36, 34, 0.5)',
+				primary: "#3b82f6",     // Bright blue
+				secondary: "#facc15",   // Soft yellow
+				accent: "#34d399",      // Soft green
+				muted: "#f3f4f6",       // Light gray for backgrounds
 			},
 			fontFamily: {
-				'lora': ['Lora', 'serif'],
-				'roboto': ['Roboto', 'sans-serif'],
+				sans: ["Inter", "ui-sans-serif", "system-ui"],
 			},
-			fontSize: {
-				'heading-1-30': '30px',
-				'heading-1-24': '24px',
-				'heading-1-20': '20px',
-				'heading-1-15': '15px',
+			borderRadius: {
+				xl: "1rem",
+				"2xl": "1.5rem",
+			},
+			spacing: {
+				18: "4.5rem",
+				22: "5.5rem",
 			},
 		},
 	},
-	plugins: [require("tailwindcss-animate")],
-}
+	plugins: [
+		require("tailwindcss-animate"),
+	],
+};
 
