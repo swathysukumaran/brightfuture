@@ -1,7 +1,7 @@
 import { Button } from "../ui/button";
 import { BookOpen, Clock, MessageSquare } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-
+import coverimage from "../../assets/cover.jpg";
 function LandingPage() {
   const navigate = useNavigate();
 
@@ -17,17 +17,22 @@ function LandingPage() {
         </div>
       </header>
       {/* Hero Section */}
-      <section className="flex flex-col items-center text-center px-4 py-16 bg-blue-50">
-        <h2 className="text-4xl font-extrabold mb-4">
-          Your Bright Future Starts Here
-        </h2>
-        <p className="text-lg mb-6 max-w-xl">
-          Book the right tutor in minutes. Learn on your schedule with the help
-          you need.
-        </p>
-        <Button size="lg" onClick={() => navigate("/tutors")}>
-          Find Tutors
-        </Button>
+      <section className="flex flex-col-reverse md:flex-row items-center justify-between px-6 py-16 bg-blue-50 gap-10">
+        <div className="w-full md:w-1/2 flex justify-center">
+          <img src={coverimage} />
+        </div>
+        <div className="w-full md:w-1/2 text-center md:text-left">
+          <h2 className="text-4xl font-extrabold mb-4">
+            Your Bright Future Starts Here
+          </h2>
+          <p className="text-lg mb-6 max-w-xl">
+            Book the right tutor in minutes. Learn on your schedule with the
+            help you need.
+          </p>
+          <Button size="lg" onClick={() => navigate("/tutors")}>
+            Find Tutors
+          </Button>
+        </div>
       </section>
 
       {/* Highlights */}
