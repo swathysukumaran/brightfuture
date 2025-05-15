@@ -3,24 +3,47 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useNavigate } from "react-router-dom";
+import { API_URL } from "../../config/api";
 
 export default function Register() {
   const navigate = useNavigate();
-  const [form, setForm] = useState({
+  const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const [error, setError] = useState("");
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    // TODO: Add validation and backend call
-    console.log("Submitted:", form);
+
+    if (formData.password !== formData.confirmPassword) {
+      setError("Passwords do not match");
+      return;
+    }
+
+    try {
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      if (response.ok) {
+        navigate("/login");
+      } else {
+        const data = await response.json();
+        setError(data.error || "Registration failed");
+      }
+    } catch (err) {
+      setError("Registration failed");
+      console.error(err);
+    }
   };
 
   return (
@@ -33,13 +56,7 @@ export default function Register() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="name">Full Name</Label>
-            <Input
-              id="name"
-              name="name"
-              type="text"
-              required
-              onChange={handleChange}
-            />
+            <Input id="name" name="name" required onChange={handleChange} />
           </div>
 
           <div>
@@ -74,6 +91,8 @@ export default function Register() {
               onChange={handleChange}
             />
           </div>
+
+          {error && <p className="text-sm text-red-600">{error}</p>}
 
           <Button type="submit" className="w-full mt-4">
             Create Account
