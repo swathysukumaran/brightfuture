@@ -1,111 +1,69 @@
-import React, { useState } from "react";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "../ui/card";
-import { Label } from "../ui/label";
+import { useState } from "react";
 import { Input } from "../ui/input";
 import { Button } from "../ui/button";
+import { Label } from "../ui/label";
 import { useNavigate } from "react-router-dom";
-import { API_URL } from "@/config/api";
-import { Alert, AlertDescription } from "../ui/alert";
 
-import { toast } from "sonner";
-function Login() {
+export default function Login() {
   const navigate = useNavigate();
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-  const [error, setError] = useState("");
-  const [, setIsLoading] = useState(false);
+  const [form, setForm] = useState({ email: "", password: "" });
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setError("");
-    setIsLoading(true);
-    try {
-      console.log("API_URL", API_URL);
-      const response = await fetch(`${API_URL}/auth/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        credentials: "include",
-        body: JSON.stringify(formData),
-      });
-      const data = await response.json();
-      if (!response.ok) {
-        // Check for a specific error message
-        console.log("Response Data:", data);
-        setError(data.error || "Login failed. Please try again.");
-        setIsLoading(false);
-        return; // Stop execution here
-      }
-      toast.success("Login successful! Redirecting...");
-
-      navigate("/home");
-    } catch (err) {
-      console.error("Login error:", err);
-      setError("Network error. Please try again");
-    } finally {
-      console.log("Finally");
-      setIsLoading(false);
-    }
+    // TODO: Send login request
+    console.log("Login submitted:", form);
   };
 
   return (
-    <Card className="w-full bg-white max-w-md">
-      <CardHeader>
-        <CardTitle>Welcome back</CardTitle>
-        <CardDescription>Enter your credentials to login</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <Alert
-              variant="destructive"
-              className="p-3 bg-red-100 border border-red-500 rounded-md"
-            >
-              <AlertDescription className="text-red-700">
-                {error}
-              </AlertDescription>
-            </Alert>
-          )}
-          <div className="space-y-2">
+    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
+      <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-8">
+        <h2 className="text-2xl font-bold mb-6 text-center text-primary">
+          Welcome Back!
+        </h2>
+
+        <form className="space-y-4" onSubmit={handleSubmit}>
+          <div>
             <Label htmlFor="email">Email</Label>
             <Input
               id="email"
+              name="email"
               type="email"
-              value={formData.email}
-              onChange={(e) =>
-                setFormData({ ...formData, email: e.target.value })
-              }
               required
+              onChange={handleChange}
             />
           </div>
 
-          <div className="space-y-2">
+          <div>
             <Label htmlFor="password">Password</Label>
             <Input
               id="password"
+              name="password"
               type="password"
-              value={formData.password}
-              onChange={(e) =>
-                setFormData({ ...formData, password: e.target.value })
-              }
               required
+              onChange={handleChange}
             />
           </div>
 
-          <Button type="submit" className="w-full">
+          <Button type="submit" className="w-full mt-4">
             Login
           </Button>
         </form>
-      </CardContent>
-    </Card>
+
+        <p className="text-sm text-center mt-4 text-gray-600">
+          New here?{" "}
+          <button
+            className="text-primary underline"
+            type="button"
+            onClick={() => navigate("/register")}
+          >
+            Create an account
+          </button>
+        </p>
+      </div>
+    </div>
   );
 }
-
-export default Login;
