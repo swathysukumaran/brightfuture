@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { Card, CardContent } from "../ui/card";
 import { Button } from "../ui/button";
 import { useNavigate } from "react-router-dom";
+import ExpandableText from "./ExpandableText";
 type Tutor = {
   _id: string;
   name: string;
@@ -45,10 +46,13 @@ export default function TutorListing() {
                 <CardContent className="p-6">
                   <h3 className="text-xl font-semibold mb-1">{tutor.name}</h3>
                   <p className="text-sm text-gray-600 mb-2">{tutor.subject}</p>
-                  <p className="text-sm text-gray-500 mb-4">{tutor.bio}</p>
+
+                  {/* Read more toggle logic */}
+                  <ExpandableText text={tutor.bio} maxLength={100} />
+
                   <Button
                     onClick={() => navigate(`/book/${tutor._id}`)}
-                    className="w-full"
+                    className="w-full mt-4"
                   >
                     Book Now
                   </Button>
