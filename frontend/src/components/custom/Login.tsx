@@ -3,7 +3,8 @@ import { Input } from "../ui/input";
 import { Button } from "../ui/button";
 import { Label } from "../ui/label";
 import { useNavigate } from "react-router-dom";
-import { toast } from "../ui/sonner"; // or your toast lib
+import { toast } from "sonner"; // ✅ Correct import for sonner
+import { Toaster } from "../ui/sonner";
 import { API_URL } from "../../config/api";
 
 export default function Login() {
@@ -49,53 +50,58 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-muted px-4">
-      <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-8">
-        <h2 className="text-2xl font-bold mb-6 text-center text-primary">
-          Welcome Back!
-        </h2>
+    <>
+      {/* Toaster component must be rendered once */}
+      <Toaster />
 
-        <form className="space-y-4" onSubmit={handleSubmit}>
-          <div>
-            <Label htmlFor="email">Email</Label>
-            <Input
-              id="email"
-              name="email"
-              type="email"
-              required
-              onChange={handleChange}
-            />
-          </div>
+      <div className="min-h-screen flex items-center justify-center bg-muted px-4">
+        <div className="w-full max-w-md bg-white shadow-md rounded-2xl p-8">
+          <h2 className="text-2xl font-bold mb-6 text-center text-primary">
+            Welcome Back!
+          </h2>
 
-          <div>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              id="password"
-              name="password"
-              type="password"
-              required
-              onChange={handleChange}
-            />
-          </div>
+          <form className="space-y-4" onSubmit={handleSubmit}>
+            <div>
+              <Label htmlFor="email">Email</Label>
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                required
+                onChange={handleChange}
+              />
+            </div>
 
-          {error && <p className="text-sm text-red-600">{error}</p>}
+            <div>
+              <Label htmlFor="password">Password</Label>
+              <Input
+                id="password"
+                name="password"
+                type="password"
+                required
+                onChange={handleChange}
+              />
+            </div>
 
-          <Button type="submit" className="w-full mt-4" disabled={isLoading}>
-            {isLoading ? "Logging in..." : "Login"}
-          </Button>
-        </form>
+            {error && <p className="text-sm text-red-600">{error}</p>}
 
-        <p className="text-sm text-center mt-4 text-gray-600">
-          New here?{" "}
-          <button
-            className="text-primary underline"
-            type="button"
-            onClick={() => navigate("/register")}
-          >
-            Create an account
-          </button>
-        </p>
+            <Button type="submit" className="w-full mt-4" disabled={isLoading}>
+              {isLoading ? "Logging in..." : "Login"}
+            </Button>
+          </form>
+
+          <p className="text-sm text-center mt-4 text-gray-600">
+            New here?{" "}
+            <button
+              className="text-primary underline"
+              type="button"
+              onClick={() => navigate("/register")}
+            >
+              Create an account
+            </button>
+          </p>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
