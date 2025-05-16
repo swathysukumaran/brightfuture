@@ -47,12 +47,12 @@ export default function BookAppointment() {
         message,
       }),
     });
-
+    const data = await response.json();
     if (response.ok) {
       toast.success("Appointment booked!");
       navigate("/appointments");
     } else {
-      toast.error("Failed to book appointment.");
+      toast.error(data.error || "Booking failed.");
     }
   };
   if (!tutor) return <p className="p-6">Loading tutor details...</p>;
