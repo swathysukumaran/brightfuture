@@ -35,7 +35,7 @@ function Header() {
         <img
           src={logo}
           alt="logo"
-          onClick={() => navigate("/home")} // Navigate to Browse Tutors
+          onClick={() => navigate("/dashboard")} // Navigate to Browse Tutors
           className="w-auto h-12 sm:h-16 md:h-20 cursor-pointer"
         />
         <header className="p-4 text-center font-lora text-3xl font-semibold">

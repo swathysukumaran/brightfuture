@@ -5,7 +5,7 @@ import { toast } from "sonner";
 // Interface for processed appointments with proper Date objects
 interface Appointment {
   _id: string;
-  tutorId: string;
+  tutorId: { name: string };
   start: Date;
   end: Date;
   title: string;
@@ -13,6 +13,7 @@ interface Appointment {
 
 const StudentAppointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,8 +29,9 @@ const StudentAppointments: React.FC = () => {
         const data = await response.json();
 
         setAppointments(data);
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
       } catch (error) {
-        toast.error("Failed to load appointments:", error);
+        toast.error("Failed to load appointments");
       }
       setLoading(false);
     };
@@ -72,7 +74,7 @@ const StudentAppointments: React.FC = () => {
                     key={appt._id}
                     className="border-t hover:bg-gray-50 text-sm"
                   >
-                    <td className="py-3 px-4">{appt.tutorId?.name || "—"}</td>
+                    <td className="py-3 px-4">{appt.tutorId.name || "—"}</td>
                     <td className="py-3 px-4">{date}</td>
                     <td className="py-3 px-4">{time}</td>
                     <td className="py-3 px-4">{appt.title}</td>

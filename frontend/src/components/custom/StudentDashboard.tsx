@@ -41,7 +41,7 @@ export default function StudentDashboard() {
           <ActionCard
             icon={<Mail className="w-6 h-6 text-primary" />}
             title="Contact Us"
-            onClick={() => navigate("/contact")}
+            onClick={() => navigate("/contacts")}
           />
         </div>
       </div>
