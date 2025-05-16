@@ -1,23 +1,11 @@
 import React, { useState, useEffect } from "react";
-import moment from "moment";
 import { API_URL } from "@/config/api";
-
-// Interface for data from API
-interface AppointmentResponse {
-  _id: string;
-  tutorId: string;
-  studentId: string;
-  start: string; // API returns dates as strings
-  end: string;
-  title: string;
-  __v: number;
-}
+import { toast } from "sonner";
 
 // Interface for processed appointments with proper Date objects
 interface Appointment {
   _id: string;
   tutorId: string;
-  studentId: string;
   start: Date;
   end: Date;
   title: string;
@@ -25,6 +13,7 @@ interface Appointment {
 
 const StudentAppointments: React.FC = () => {
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchStudentAppointments = async () => {
@@ -36,61 +25,62 @@ const StudentAppointments: React.FC = () => {
           },
           credentials: "include",
         });
-        const data = (await response.json()) as AppointmentResponse[];
+        const data = await response.json();
 
-        // Convert string dates to Date objects
-        const formattedAppointments = data.map(
-          (appointment: AppointmentResponse) => ({
-            ...appointment,
-            start: new Date(appointment.start),
-            end: new Date(appointment.end),
-          })
-        );
-
-        setAppointments(formattedAppointments);
+        setAppointments(data);
       } catch (error) {
-        console.error("Error fetching student appointments:", error);
+        toast.error("Failed to load appointments:", error);
       }
+      setLoading(false);
     };
 
     fetchStudentAppointments();
   }, []);
 
   return (
-    <div className="p-4 font-roboto text-text-color bg-primary-bg min-h-screen">
-      <h2 className="text-3xl font-semibold mb-6 text-center font-lora">
-        My Appointments
-      </h2>
+    <div className="max-w-5xl mx-auto p-6">
+      <h2 className="text-2xl font-bold mb-4 text-primary">My Appointments</h2>
 
-      {appointments.length > 0 ? (
-        <table className="w-full text-left table-auto">
-          <thead>
-            <tr className="bg-gray-100">
-              <th className="px-4 py-2 rounded-tl-lg">Title</th>
-              <th className="px-4 py-2">Start</th>
-              <th className="px-4 py-2 rounded-tr-lg">End</th>
-            </tr>
-          </thead>
-          <tbody>
-            {appointments.map((appointment) => (
-              <tr key={appointment._id} className="border-b hover:bg-gray-50">
-                <td className="px-4 py-3">{appointment.title}</td>
-                <td className="px-4 py-3">
-                  {moment(appointment.start).format("MMMM Do YYYY, h:mm a")}
-                </td>
-                <td className="px-4 py-3">
-                  {moment(appointment.end).format("MMMM Do YYYY, h:mm a")}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {appointments.length === 0 ? (
+        <p className="text-gray-600">You have no upcoming appointments.</p>
       ) : (
-        <div className="text-center p-10 bg-gray-50 rounded-lg shadow-sm">
-          <p className="text-lg text-gray-600">No appointments booked yet.</p>
-          <p className="mt-2 text-primary-600">
-            Book a session with one of our tutors to get started!
-          </p>
+        <div className="overflow-x-auto">
+          <table className="min-w-full bg-white shadow rounded-xl">
+            <thead>
+              <tr className="bg-muted text-left text-sm text-gray-700">
+                <th className="py-3 px-4">Tutor</th>
+                <th className="py-3 px-4">Date</th>
+                <th className="py-3 px-4">Time</th>
+                <th className="py-3 px-4">Title</th>
+              </tr>
+            </thead>
+            <tbody>
+              {appointments.map((appt) => {
+                const start = new Date(appt.start);
+                const end = new Date(appt.end);
+                const date = start.toLocaleDateString();
+                const time = `${start.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })} - ${end.toLocaleTimeString([], {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}`;
+
+                return (
+                  <tr
+                    key={appt._id}
+                    className="border-t hover:bg-gray-50 text-sm"
+                  >
+                    <td className="py-3 px-4">{appt.tutorId?.name || "—"}</td>
+                    <td className="py-3 px-4">{date}</td>
+                    <td className="py-3 px-4">{time}</td>
+                    <td className="py-3 px-4">{appt.title}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
         </div>
       )}
     </div>

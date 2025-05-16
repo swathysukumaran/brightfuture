@@ -45,7 +45,7 @@ function Header() {
 
       <div className="flex gap-16 p-2  bg-secondary-bg justify-end w-full">
         <Link
-          to="/browse"
+          to="/tutors"
           className="flex items-center gap-2 hover:text-primary-button"
         >
           Browse Tutors
