@@ -1,11 +1,44 @@
 import { useNavigate } from "react-router-dom";
 
 import { CalendarDays, Users, Mail } from "lucide-react";
-
+import { useEffect, useState } from "react";
+import { API_URL } from "../../config/api";
+type Appointment = {
+  _id: string;
+  tutorId: { name: string };
+  start: Date;
+  end: string;
+  title: string;
+};
 export default function StudentDashboard() {
   const navigate = useNavigate();
   const userName = "Swathy"; // Replace with dynamic name from context/state
+  const [nextAppointment, setNextAppointment] = useState<Appointment | null>(
+    null
+  );
+  useEffect(() => {
+    const fetchAppointments = async () => {
+      try {
+        const res = await fetch(`${API_URL}/api/appointments`, {
+          credentials: "include",
+        });
+        const data: Appointment[] = await res.json();
 
+        const now = new Date();
+
+        const upcoming = data
+          .map((appt) => ({ ...appt, start: new Date(appt.start) }))
+          .filter((appt) => appt.start > now)
+          .sort((a, b) => +a.start - +b.start);
+
+        setNextAppointment(upcoming[0] || null);
+      } catch (err) {
+        console.error("Failed to fetch appointments", err);
+      }
+    };
+
+    fetchAppointments();
+  }, []);
   return (
     <div className="min-h-screen bg-muted px-6 py-12">
       <div className="max-w-4xl mx-auto">
@@ -23,7 +56,23 @@ export default function StudentDashboard() {
             <CalendarDays className="text-blue-500" />
             Your Next Appointment
           </h3>
-          <p className="text-gray-600">No sessions scheduled. Book one now!</p>
+          {nextAppointment ? (
+            <div>
+              <p className="text-gray-800 font-medium">
+                {nextAppointment.tutorId?.name}
+              </p>
+              <p className="text-gray-600 text-sm">
+                {new Date(nextAppointment.start).toLocaleString()}
+              </p>
+              <p className="text-gray-500 text-sm mt-1">
+                {nextAppointment.title}
+              </p>
+            </div>
+          ) : (
+            <p className="text-gray-600">
+              No sessions scheduled. Book one now!
+            </p>
+          )}
         </div>
 
         {/* Quick Actions */}

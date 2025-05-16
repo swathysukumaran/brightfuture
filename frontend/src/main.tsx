@@ -17,7 +17,7 @@ import Login from "./components/custom/Login.tsx";
 import LandingPage from "./components/custom/LandingPage.tsx";
 
 import StudentDashboard from "./components/custom/StudentDashboard.tsx";
-import HomePage from "./components/custom/HomePage.tsx";
+
 import StudentAppointments from "./components/custom/StudentAppointments.tsx";
 import Contact from "./components/custom/Contact.tsx";
 import TutorListing from "./components/custom/TutorListing.tsx";
@@ -66,10 +66,7 @@ const router = createBrowserRouter([
         path: "/book/:id",
         element: <BookAppointment />,
       },
-      {
-        path: "/home",
-        element: <HomePage />,
-      },
+
       {
         path: "/contacts",
         element: <Contact />,
