@@ -2,9 +2,10 @@ import React from "react";
 import logo from "../../assets/logo.png";
 import { Button } from "../ui/button";
 import { API_URL } from "@/config/api";
-import { useNavigate } from "react-router-dom";
-import { Link } from "react-router-dom";
-function Header() {
+import { useNavigate, NavLink } from "react-router-dom";
+import { toast } from "sonner";
+
+export default function Header() {
   const navigate = useNavigate();
 
   const logout = async () => {
@@ -21,57 +22,72 @@ function Header() {
   };
 
   const handleLogout = async () => {
-    try {
-      await logout();
+    const success = await logout();
+    if (success) {
+      toast.success("Logged out");
       navigate("/");
-    } catch (error) {
-      console.error("Logout failed:", error);
+    } else {
+      toast.error("Logout failed. Please try again.");
     }
   };
 
   return (
-    <div className=" bg-primary-bg  flex flex-col gap-1 justify-between w-full">
-      <div className="flex items-left bg-secondary-bg w-full py-4 px-2">
-        <img
-          src={logo}
-          alt="logo"
-          onClick={() => navigate("/dashboard")} // Navigate to Browse Tutors
-          className="w-auto h-12 sm:h-16 md:h-20 cursor-pointer"
-        />
-        <header className="p-4 text-center font-lora text-3xl font-semibold">
-          Bright Futures Tutoring
-        </header>
-      </div>
+    <header className="sticky top-0 z-50 w-full bg-secondary-bg shadow">
+      <div className="flex items-center justify-between px-4 py-3 sm:px-8">
+        {/* Logo + Title */}
+        <div className="flex items-center gap-4">
+          <img
+            src={logo}
+            alt="logo"
+            onClick={() => navigate("/dashboard")}
+            className="h-12 sm:h-14 cursor-pointer"
+          />
+          <h1 className="text-xl sm:text-2xl font-semibold text-primary">
+            Bright Futures Tutoring
+          </h1>
+        </div>
 
-      <div className="flex gap-16 p-2  bg-secondary-bg justify-end w-full">
-        <Link
-          to="/tutors"
-          className="flex items-center gap-2 hover:text-primary-button"
-        >
-          Browse Tutors
-        </Link>
-        <Link
-          to="/appointments"
-          className="flex text-primary items-center gap-2 hover:text-primary-button"
-        >
-          View Appointments
-        </Link>
-        <Link
-          to="/contacts"
-          className="flex text-primary items-center gap-2 hover:text-primary-button"
-        >
-          Contact us
-        </Link>
-        <Button
-          variant="ghost"
-          className="bg-secondary-button text-white hover:bg-primary-button"
-          onClick={handleLogout}
-        >
-          Logout
-        </Button>
+        {/* Nav Links */}
+        <nav className="hidden sm:flex items-center gap-8 text-sm font-medium text-primary">
+          <NavLink
+            to="/tutors"
+            className={({ isActive }) =>
+              isActive
+                ? "text-primary-button font-semibold"
+                : "hover:text-primary-button"
+            }
+          >
+            Browse Tutors
+          </NavLink>
+          <NavLink
+            to="/appointments"
+            className={({ isActive }) =>
+              isActive
+                ? "text-primary-button font-semibold"
+                : "hover:text-primary-button"
+            }
+          >
+            View Appointments
+          </NavLink>
+          <NavLink
+            to="/contacts"
+            className={({ isActive }) =>
+              isActive
+                ? "text-primary-button font-semibold"
+                : "hover:text-primary-button"
+            }
+          >
+            Contact Us
+          </NavLink>
+          <Button
+            variant="ghost"
+            className="bg-secondary-button text-white hover:bg-primary-button"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
+        </nav>
       </div>
-    </div>
+    </header>
   );
 }
-
-export default Header;
