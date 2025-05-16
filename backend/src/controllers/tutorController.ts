@@ -27,7 +27,8 @@ export const getTutorById = async (req: Request, res: Response) => {
     try {
         const tutor = await Tutor.findById(req.params.id);
         if (!tutor) {
-            return res.status(404).json({ message: 'Tutor not found' });
+             res.status(404).json({ message: 'Tutor not found' });
+             return;
         }
         res.json(tutor);
     } catch (error) {
