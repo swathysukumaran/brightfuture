@@ -5,7 +5,7 @@ import mongoose from 'mongoose';
 export const getAppointmentsByStudent = async (req: Request, res: Response) => {
     try {
         const studentId = new mongoose.Types.ObjectId(get(req, 'identity._id'));
-        console.log("studentId", studentId);
+        
         const appointments = await Appointment.find({ studentId }).populate('tutorId', 'name'); // Populate tutor name
         console.log("appointments", appointments);
         res.json(appointments);
@@ -24,13 +24,31 @@ export const createAppointment = async (req: Request, res: Response) => {
       return;
     }
     const { tutorId, start, end, title } = req.body;
-    console.log("req", req.body);
-
     if (!tutorId || !start || !end || !title) {
       res.status(400).json({ message: 'Missing required fields.' });
       return;
     }
 
+        //Check if tutor already has an appointment at this time
+        const tutorConflict = await Appointment.findOne({
+          tutorId: new mongoose.Types.ObjectId(tutorId),
+          start: { $lt: end},
+          end: { $gt: start},
+        });
+    
+        if (tutorConflict) {
+          return res.status(400).json({ error: "Tutor is already booked at this time." });
+        }
+     //Check if student already has an appointment at this time
+     const studentConflict = await Appointment.findOne({
+      studentId: userId,
+      start: { $lt: end },
+      end: { $gt: start},
+    });
+
+    if (studentConflict) {
+      return res.status(400).json({ error: "You already have an appointment at this time." });
+    }
     const newAppointment = new Appointment({
       tutorId: new mongoose.Types.ObjectId(tutorId),
       studentId: userId, // Use userId
