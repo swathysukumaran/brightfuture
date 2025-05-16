@@ -21,6 +21,7 @@ import HomePage from "./components/custom/HomePage.tsx";
 import StudentAppointments from "./components/custom/StudentAppointments.tsx";
 import Contact from "./components/custom/Contact.tsx";
 import TutorListing from "./components/custom/TutorListing.tsx";
+import BookAppointment from "./components/custom/BookAppointment.tsx";
 // Create a layout component that conditionally renders Header
 const RootLayout = () => {
   const location = useLocation();
@@ -60,6 +61,10 @@ const router = createBrowserRouter([
       {
         path: "/tutors",
         element: <TutorListing />,
+      },
+      {
+        path: "/book/:id",
+        element: <BookAppointment />,
       },
       {
         path: "/home",

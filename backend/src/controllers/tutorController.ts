@@ -22,3 +22,15 @@ export const createTutor = async (req:Request, res:Response) => {
         res.status(400).json({ message: error.message });
     }
 }
+
+export const getTutorById = async (req: Request, res: Response) => {
+    try {
+        const tutor = await Tutor.findById(req.params.id);
+        if (!tutor) {
+            return res.status(404).json({ message: 'Tutor not found' });
+        }
+        res.json(tutor);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+};
