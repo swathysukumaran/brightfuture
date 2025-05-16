@@ -37,7 +37,8 @@ export const createAppointment = async (req: Request, res: Response) => {
         });
     
         if (tutorConflict) {
-          return res.status(400).json({ error: "Tutor is already booked at this time." });
+           res.status(400).json({ error: "Tutor is already booked at this time." });
+           return;
         }
      //Check if student already has an appointment at this time
      const studentConflict = await Appointment.findOne({
@@ -47,7 +48,8 @@ export const createAppointment = async (req: Request, res: Response) => {
     });
 
     if (studentConflict) {
-      return res.status(400).json({ error: "You already have an appointment at this time." });
+      res.status(400).json({ error: "You already have an appointment at this time." });
+      return ;
     }
     const newAppointment = new Appointment({
       tutorId: new mongoose.Types.ObjectId(tutorId),

@@ -36,25 +36,34 @@ export default function BookAppointment() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    const response = await fetch(`${API_URL}/appointments`, {
+
+    const startDateTime = new Date(`${date}T${time}`);
+    const endDateTime = new Date(startDateTime.getTime() + 60 * 60 * 1000); // 1 hour session
+
+    const response = await fetch(`${API_URL}/api/appointments`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       credentials: "include",
       body: JSON.stringify({
         tutorId: id,
-        date,
-        time,
-        message,
+        start: startDateTime,
+        end: endDateTime,
+        title: message || "Tutoring session",
       }),
     });
+
     const data = await response.json();
-    if (response.ok) {
-      toast.success("Appointment booked!");
-      navigate("/appointments");
-    } else {
-      toast.error(data.error || "Booking failed.");
+    console.log("Booking error response:", data);
+
+    if (!response.ok) {
+      toast.error(data.error || data.message || "Booking failed.");
+      return;
     }
+
+    toast.success("Appointment booked!");
+    navigate("/appointments");
   };
+
   if (!tutor) return <p className="p-6">Loading tutor details...</p>;
 
   return (
