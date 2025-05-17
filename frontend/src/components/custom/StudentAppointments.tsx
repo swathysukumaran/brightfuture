@@ -40,7 +40,7 @@ const StudentAppointments: React.FC = () => {
   }, []);
 
   if (loading) {
-    return <h1>Loading....</h1>;
+    return <h6>Loading....</h6>;
   }
 
   return (
