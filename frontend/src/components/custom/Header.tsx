@@ -1,12 +1,14 @@
-import React from "react";
+import React, { useState } from "react";
 import logo from "../../assets/logo.png";
 import { Button } from "../ui/button";
 import { API_URL } from "@/config/api";
 import { useNavigate, NavLink } from "react-router-dom";
 import { toast } from "sonner";
+import { Menu, X } from "lucide-react";
 
 export default function Header() {
   const navigate = useNavigate();
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const logout = async () => {
     try {
@@ -31,6 +33,46 @@ export default function Header() {
     }
   };
 
+  const navLinks = (
+    <>
+      <NavLink
+        to="/tutors"
+        className={({ isActive }) =>
+          isActive
+            ? "text-primary-button font-semibold"
+            : "hover:text-primary-button"
+        }
+      >
+        Browse Tutors
+      </NavLink>
+      <NavLink
+        to="/appointments"
+        className={({ isActive }) =>
+          isActive
+            ? "text-primary-button font-semibold"
+            : "hover:text-primary-button"
+        }
+      >
+        View Appointments
+      </NavLink>
+      <NavLink
+        to="/contacts"
+        className={({ isActive }) =>
+          isActive ? "text-primary-button font-semibold" : "hover:underline"
+        }
+      >
+        Contact Us
+      </NavLink>
+      <Button
+        variant="outline"
+        className="text-primary hover:underline px-6 font-medium"
+        onClick={handleLogout}
+      >
+        Logout
+      </Button>
+    </>
+  );
+
   return (
     <header className="sticky top-0 z-50 w-full bg-secondary-bg shadow">
       <div className="flex items-center justify-between px-4 py-3 sm:px-8">
@@ -47,47 +89,30 @@ export default function Header() {
           </h1>
         </div>
 
-        {/* Nav Links */}
+        {/* Desktop Nav */}
         <nav className="hidden sm:flex items-center gap-8 text-sm font-medium text-primary">
-          <NavLink
-            to="/tutors"
-            className={({ isActive }) =>
-              isActive
-                ? "text-primary-button font-semibold"
-                : "hover:text-primary-button"
-            }
-          >
-            Browse Tutors
-          </NavLink>
-          <NavLink
-            to="/appointments"
-            className={({ isActive }) =>
-              isActive
-                ? "text-primary-button font-semibold"
-                : "hover:text-primary-button"
-            }
-          >
-            View Appointments
-          </NavLink>
-          <NavLink
-            to="/contacts"
-            className={({ isActive }) =>
-              isActive
-                ? "text-primary-button font-semibold"
-                : "hover:text-primary-button"
-            }
-          >
-            Contact Us
-          </NavLink>
-          <Button
-            variant="ghost"
-            className="bg-secondary-button text-white hover:bg-primary-button"
-            onClick={handleLogout}
-          >
-            Logout
-          </Button>
+          {navLinks}
         </nav>
+
+        {/* Mobile Toggle */}
+        <button
+          className="sm:hidden text-primary"
+          onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+        >
+          {isMobileMenuOpen ? (
+            <X className="w-6 h-6" />
+          ) : (
+            <Menu className="w-6 h-6" />
+          )}
+        </button>
       </div>
+
+      {/* Mobile Nav */}
+      {isMobileMenuOpen && (
+        <div className="sm:hidden flex flex-col gap-4 px-6 pb-4 text-sm font-medium text-primary">
+          {navLinks}
+        </div>
+      )}
     </header>
   );
 }
