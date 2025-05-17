@@ -59,7 +59,11 @@ export const login=async (req:express.Request,res:express.Response)=>{
         console.log(user.authentication.sessionToken);
         await user.save();
 
-        res.cookie('TEMPO-AUTH',user.authentication.sessionToken,{domain:'localhost',path:'/'});
+        res.cookie('TEMPO-AUTH', user.authentication.sessionToken, {
+            httpOnly: true,
+            secure: true,
+            sameSite: 'none',
+          });
         res.status(200).json(user);
         return;
     }catch(error){
