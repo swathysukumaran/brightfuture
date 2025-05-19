@@ -8,7 +8,7 @@ import { API_URL } from "../../config/api";
 export default function Register() {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    name: "",
+    username: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -56,7 +56,12 @@ export default function Register() {
         <form className="space-y-4" onSubmit={handleSubmit}>
           <div>
             <Label htmlFor="name">Full Name</Label>
-            <Input id="name" name="name" required onChange={handleChange} />
+            <Input
+              id="username"
+              name="username"
+              required
+              onChange={handleChange}
+            />
           </div>
 
           <div>

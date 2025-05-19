@@ -13,7 +13,9 @@ function LandingPage() {
           <Button variant="outline" onClick={() => navigate("/login")}>
             Login
           </Button>
-          <Button onClick={() => navigate("/register")}>Register</Button>
+          <Button className="text-white" onClick={() => navigate("/register")}>
+            Register
+          </Button>
         </div>
       </header>
       {/* Hero Section */}
