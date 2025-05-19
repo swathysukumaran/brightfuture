@@ -31,7 +31,11 @@ function LandingPage() {
             Book the right tutor in minutes. Learn on your schedule with the
             help you need.
           </p>
-          <Button size="lg" onClick={() => navigate("/tutors")}>
+          <Button
+            size="lg"
+            className="text-white"
+            onClick={() => navigate("/tutors")}
+          >
             Find Tutors
           </Button>
         </div>
